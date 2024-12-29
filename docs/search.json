@@ -187,5 +187,26 @@
     "title": "04_Automated_Slides_with_Quarto -> Automated Slides with Quarto",
     "section": "",
     "text": "import numpy as np\nimport matplotlib.pyplot as plt\n\nr = np.arange(0, 2, 0.01)\ntheta = 2 * np.pi * r\nfig, ax = plt.subplots(subplot_kw={'projection': 'polar'})\nax.plot(theta, r)\nax.set_rticks([0.5, 1, 1.5, 2])\nax.grid(True)\nplt.show()"
+  },
+  {
+    "objectID": "labs/04_Automated_Slides_with_Quarto/file/Automated_Slides.html",
+    "href": "labs/04_Automated_Slides_with_Quarto/file/Automated_Slides.html",
+    "title": "lab2",
+    "section": "",
+    "text": "This is some text\nAs is this"
+  },
+  {
+    "objectID": "labs/04_Automated_Slides_with_Quarto/file/Automated_Slides.html#introduction",
+    "href": "labs/04_Automated_Slides_with_Quarto/file/Automated_Slides.html#introduction",
+    "title": "lab2",
+    "section": "",
+    "text": "This is some text\nAs is this"
+  },
+  {
+    "objectID": "labs/04_Automated_Slides_with_Quarto/file/Automated_Slides.html#here-are-some-code-outputs",
+    "href": "labs/04_Automated_Slides_with_Quarto/file/Automated_Slides.html#here-are-some-code-outputs",
+    "title": "lab2",
+    "section": "Here Are Some Code Outputs",
+    "text": "Here Are Some Code Outputs"
   }
 ]

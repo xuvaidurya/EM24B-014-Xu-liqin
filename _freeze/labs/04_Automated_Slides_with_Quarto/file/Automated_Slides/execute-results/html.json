@@ -1,0 +1,12 @@
+{
+  "hash": "ff08e55a0eb31cc90f9b0128b18fa545",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"lab2\"\nauthor: \"Xuliqin\"\nformat: revealjs\n---\n\n\n\n\n\n## Introduction\n\n- This is some text\n- As is this\n\n## Here Are Some Code Outputs\n\n::: {#c2065a18 .cell execution_count=1}\n\n::: {.cell-output .cell-output-display}\n![](Automated_Slides_files/figure-html/cell-2-output-1.png){width=450 height=439}\n:::\n:::\n\n\n",
+    "supporting": [
+      "Automated_Slides_files\\figure-html"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
