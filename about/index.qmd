@@ -1,0 +1,33 @@
+---
+about:
+  template: jolla
+  id: about-block
+  image: "my_image.png"
+  links:
+    - icon: github
+      text: Github
+      href: https://github.com/Ariyzzzzzyanyu 
+---
+
+::: {#about-block}
+:::
+
+# Hi, I’m Xu Liqin!
+## Educational Background
+I am a student pursuing a Master's degree in Educational Administration. I chose this program because I hope to be able to keep up with the pace of educational reform, learn about the latest educational methods and technologies, improve the skills necessary to effectively integrate technology into educational management and administration, and strengthen my professional competitiveness.
+
+## Experience and research interests
+Prior to commencing my graduate studies, I gained valuable experience in the field of education. I have worked as a faculty member in higher education, and my work in this position has given me a comprehensive understanding of the complexities of educational administration.
+
+My research interests are wide-ranging and include exploring how emerging technologies can be used to improve teaching and learning, streamline administrative processes and enhance communication within educational organisations. In my free time, I engage in self-directed research projects to explore these interests in more depth.
+
+## Course Goals
+My goals for the course Informational technologies in Business are:
+1.To be aware of the latest technological trends and their application in business, especially in educational management.
+2.To learn and endeavour to master the computer language taught by the teacher and apply it in study, work and life.
+3.To learn how to analyse and interpret data effectively in order to make informed decisions in an educational context.
+4.To gain an in-depth understanding of the ethical and legal issues involved in the use of technology in education.
+
+## Hobbies
+☆Outside of my academic pursuits, I have a passion for cooking. I find joy in trying out new recipes, perfecting my culinary skills and sharing delicious meals with friends and family. Cooking allows me to unwind after a busy day at school or work.
+☆In addition, I enjoy playing volleyball, especially air volleyball. The camaraderie, physical exercise and the thrill of competition provide me with a sense of accomplishment and satisfaction.

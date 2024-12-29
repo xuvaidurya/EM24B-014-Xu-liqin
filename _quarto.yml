@@ -1,0 +1,89 @@
+# This file controls the settings for your Quarto template from www.marvinschmitt.com
+
+# website settings
+website:
+  title: "Xuliqin"                                # Your name
+  description: "I am a student"   # A brief slogan (optional)
+  
+  # start of the navigation bar at the top of the website
+  navbar:
+    pinned: true
+    # logo: /img/logo.png
+    
+    # your sub-pages
+    left:
+      - text: "About Me"
+        href: about/index.qmd
+      - text: "Homework"
+        menu:
+          - text: "homework2"
+            href: homework/homework2.qmd
+          - text: "homework3.1"
+            href: homework/homework3-1.qmd
+          - text: "homework3.2"
+            href: homework/homework3-2.qmd
+          - text: "homework4"
+            href: homework/homework4.qmd
+          - text: "homework5"
+            href: homework/homework5.qmd
+      - text: "Practice"
+        menu:
+          - text: "practice1"
+            href: practice/practice1106/index.qmd
+          - text: "practice2"
+            href: practice/practice1114/index.qmd
+          - text: "practice3"
+            href: practice/practice1127/practice1127-1.qmd
+          - text: "practice4"
+            href: practice/practice1127/practice1127-2.qmd
+          - text: "practice5"
+            href: practice/practice1127/practice1127-3.qmd
+          - text: "practice6"
+            href: practice/practice1206/index.qmd
+      - text: "Labs"
+        menu:
+          - text: "WorldFoodFacts"
+            href: labs/01_Getting_And_Knowing_Your_Data/WorldFoodFacts.qmd
+          - text: "Chipotle1"
+            href: labs/01_Getting_And_Knowing_Your_Data/Chipotle.qmd
+          - text: "Occupation"
+            href: labs/01_Getting_And_Knowing_Your_Data/Occupation.qmd
+          - text: "Chipotle2"
+            href: labs/02_Filtering_And_Sorting/Chipotle.qmd
+          - text: "Euro12"
+            href: labs/02_Filtering_And_Sorting/Euro12.qmd
+          - text: "Chipotle3"
+            href: labs/03_Visualization/Chipotle.qmd
+          - text: "Scores"
+            href: labs/03_Visualization/Scores.qmd
+          - text: "Automated Slides"
+            href: labs/04_Automated_Slides_with_Quarto/Automated_Slides.qmd
+        
+    
+    # your social media handles
+
+project:
+  type: website
+  output-dir: docs
+
+  preview: 
+    port: 3333
+    browser: true
+    watch-inputs: true
+    navigate: true
+
+execute:
+  freeze: true
+
+format:
+  html:
+    fontsize: 1.1em
+    theme: 
+      - pulse
+      - html/styles.scss
+    toc: false
+    code-link: true
+    anchor-sections: true
+    fig-cap-location: margin
+    reference-location: margin
+    footnotes-hover: true

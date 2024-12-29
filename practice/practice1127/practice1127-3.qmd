@@ -1,0 +1,125 @@
+---
+title: "Xuliqin Practice1127-3"
+output: 
+  html_document:
+    toc: FALSE
+---
+
+```{python}
+%pip install requests beautifulsoup4
+```
+
+```{python}
+import requests
+ 
+# 定义请求的 URL 和 headers
+url = "https://movie.douban.com/top250"
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+}
+ 
+# 发送 GET 请求
+response = requests.get(url, headers=headers)
+response.encoding = 'utf-8'  # 设置编码方式
+html_content = response.text  # 获取网页的 HTML 内容
+print("网页内容加载成功！")
+```
+
+```{python}
+from bs4 import BeautifulSoup
+ 
+# 使用 Beautiful Soup 解析 HTML
+soup = BeautifulSoup(html_content, 'html.parser')
+ 
+# 提取电影名称、描述、评分和评价人数
+movies = []
+for item in soup.find_all('div', class_='item'):
+    title = item.find('span', class_='title').get_text()  # 电影名称
+    description = item.find('span', class_='inq')  # 电影描述
+    rating = item.find('span', class_='rating_num').get_text()  # 评分
+    votes = item.find('div', class_='star').find_all('span')[3].get_text()  # 评价人数
+    
+    # 如果没有描述，将其置为空字符串
+    if description:
+        description = description.get_text()
+    else:
+        description = ''
+    
+    movie = {
+        "title": title,
+        "description": description,
+        "rating": rating,
+        "votes": votes.replace('人评价', '').strip()
+    }
+    movies.append(movie)
+ 
+print("数据提取成功！")
+```
+
+```{python}
+import csv
+ 
+# 将数据保存到 CSV 文件
+with open('./file/douban_top250.csv', 'w', newline='', encoding='utf-8') as csvfile:
+    fieldnames = ['title', 'description', 'rating', 'votes']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+ 
+    writer.writeheader()  # 写入表头
+    for movie in movies:
+        writer.writerow(movie)  # 写入每一行数据
+ 
+print("数据已成功保存到 douban_top250.csv")
+```
+
+```{python}
+import requests
+from bs4 import BeautifulSoup
+import csv
+ 
+# 定义请求的 URL 和 headers
+url = "https://movie.douban.com/top250"
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+}
+ 
+# 发送 GET 请求
+response = requests.get(url, headers=headers)
+response.encoding = 'utf-8'  # 设置编码方式
+html_content = response.text  # 获取网页的 HTML 内容
+ 
+# 使用 Beautiful Soup 解析 HTML
+soup = BeautifulSoup(html_content, 'html.parser')
+ 
+# 提取电影名称、描述、评分和评价人数
+movies = []
+for item in soup.find_all('div', class_='item'):
+    title = item.find('span', class_='title').get_text()  # 电影名称
+    description = item.find('span', class_='inq')  # 电影描述
+    rating = item.find('span', class_='rating_num').get_text()  # 评分
+    votes = item.find('div', class_='star').find_all('span')[3].get_text()  # 评价人数
+    
+    # 如果没有描述，将其置为空字符串
+    if description:
+        description = description.get_text()
+    else:
+        description = ''
+    
+    movie = {
+        "title": title,
+        "description": description,
+        "rating": rating,
+        "votes": votes.replace('人评价', '').strip()
+    }
+    movies.append(movie)
+ 
+# 将数据保存到 CSV 文件
+with open('./file/douban_top250.csv', 'w', newline='', encoding='utf-8') as csvfile:
+    fieldnames = ['title', 'description', 'rating', 'votes']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+ 
+    writer.writeheader()  # 写入表头
+    for movie in movies:
+        writer.writerow(movie)  # 写入每一行数据
+ 
+print("数据已成功保存到 douban_top250.csv")
+```

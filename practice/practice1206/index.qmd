@@ -1,0 +1,262 @@
+---
+title: "Xuliqin Practice1206"
+output: 
+  html_document:
+    toc: FALSE
+---
+
+```{python}
+from bs4 import BeautifulSoup
+import re
+import urllib.request, urllib.error  # for URL requests
+import csv  # for saving as CSV
+
+
+def main():
+    baseurl = "https://movie.douban.com/top250?start="
+    datalist = getdata(baseurl)
+    savepath = "./file/douban_top250.csv"
+    savedata(datalist, savepath)
+
+
+# Regular expressions to extract information
+findLink = re.compile(r'<a href="(.*?)">')  # detail link
+findImgSrc = re.compile(r'<img.*src="(.*?)"', re.S)  # image link
+findTitle = re.compile(r'<span class="title">(.*)</span>')  # movie title
+findRating = re.compile(
+    r'<span class="rating_num" property="v:average">(.*)</span>'
+)  # rating
+findJudge = re.compile(r"<span>(\d*)人评价</span>")  # number of reviews
+findInq = re.compile(r'<span class="inq">(.*)</span>')  # summary
+findBd = re.compile(r'<p class="">(.*?)</p>', re.S)  # additional info
+
+
+# Function to get data from the website
+def getdata(baseurl):
+    datalist = []
+    for i in range(0, 10):
+        url = baseurl + str(i * 25)  # Go to the next page
+        html = geturl(url)
+        soup = BeautifulSoup(html, "html.parser")
+        for item in soup.find_all("div", class_="item"):  # Extract movie items
+            data = []  # Save movie data
+            item = str(item)  # Convert to string for regex
+            link = re.findall(findLink, item)[0]  # Detail link
+            data.append(link)
+
+            imgSrc = re.findall(findImgSrc, item)[0]  # Image link
+            data.append(imgSrc)
+
+            titles = re.findall(findTitle, item)  # Titles (CN and foreign)
+            if len(titles) == 2:
+                data.append(titles[0])  # Chinese title
+                data.append(titles[1].replace("/", "").strip())  # Foreign title
+            else:
+                data.append(titles[0])  # Only Chinese title
+                data.append(" ")  # Empty for foreign title
+
+            rating = re.findall(findRating, item)[0]  # Rating
+            data.append(rating)
+
+            judgeNum = re.findall(findJudge, item)[0]  # Number of reviews
+            data.append(judgeNum)
+
+            inq = re.findall(findInq, item)  # Summary
+            if len(inq) != 0:
+                data.append(inq[0].replace("。", ""))
+            else:
+                data.append(" ")
+
+            bd = re.findall(findBd, item)[0]  # Additional info
+            bd = re.sub(r"<br(\s+)?/>(\s+)?", " ", bd)  # Replace line breaks
+            bd = re.sub("/", " ", bd)  # Replace slashes
+            data.append(bd.strip())
+
+            datalist.append(data)
+    return datalist
+
+
+# Function to save data to a CSV file
+def savedata(datalist, savepath):
+    headers = [
+        "电影详情链接",
+        "图片链接",
+        "影片中文名",
+        "影片外国名",
+        "评分",
+        "评价数",
+        "概况",
+        "相关信息",
+    ]
+    with open(savepath, mode="w", encoding="utf-8", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(headers)  # Write headers
+        for data in datalist:
+            writer.writerow(data)  # Write each movie's data
+
+
+# Function to get HTML content from a URL
+def geturl(url):
+    head = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36"
+    }
+    req = urllib.request.Request(url, headers=head)
+    try:
+        response = urllib.request.urlopen(req)
+        html = response.read().decode("utf-8")
+    except urllib.error.URLError as e:
+        if hasattr(e, "code"):
+            print(e.code)
+        if hasattr(e, "reason"):
+            print(e.reason)
+        return ""
+    return html
+
+
+if __name__ == "__main__":
+    main()
+    print("爬取成功并保存为CSV文件！")
+```
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib
+
+# 设置中文字体
+matplotlib.rcParams['font.sans-serif'] = ['SimHei']  # 使用黑体
+matplotlib.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
+
+# Load datasets
+douban_file_path = "./file/douban_top250.csv"
+imdb_file_path = "./file/IMDB_Top250.csv"
+
+douban_data = pd.read_csv(douban_file_path, encoding="utf-8", on_bad_lines="skip")
+imdb_data = pd.read_csv(imdb_file_path, encoding="utf-8", on_bad_lines="skip")
+
+# Renaming columns for clarity and merging compatibility
+douban_data.rename(
+    columns={
+        "影片中文名": "Title",
+        "评分": "Douban_Score",
+        "评价数": "Douban_Reviews",
+        "相关信息": "Douban_Info",
+    },
+    inplace=True,
+)
+
+imdb_data.rename(
+    columns={
+        "Name": "Title",
+        "Year": "Release_Year",
+        "IMDB Ranking": "IMDB_Score",
+        "Genre": "IMDB_Genre",
+        "Director": "IMDB_Director",
+    },
+    inplace=True,
+)
+
+# Calculate average scores for both platforms
+douban_avg_score = douban_data["Douban_Score"].mean()
+imdb_avg_score = imdb_data["IMDB_Score"].mean()
+
+# Find overlapping movies by title
+overlap_movies = pd.merge(douban_data, imdb_data, on="Title")
+
+# Visualize average scores
+plt.figure(figsize=(8, 5))
+plt.bar(["Douban", "IMDb"], [douban_avg_score, imdb_avg_score], alpha=0.7)
+plt.title("Average Scores: Douban vs IMDb")
+plt.ylabel("Average Score")
+plt.show()
+
+# Analyze release year distribution
+plt.figure(figsize=(10, 5))
+douban_data["Douban_Info"] = douban_data["Douban_Info"].astype(str)
+douban_years = douban_data["Douban_Info"].str.extract(r"(\d{4})").dropna()
+
+# 调试输出
+print("Extracted years from Douban_Info:")
+print(douban_years.head())
+
+# 检查 douban_years 是否为空
+if not douban_years.empty:
+    try:
+        douban_years = douban_years[0].astype(int).value_counts().sort_index()
+    except KeyError:
+        print("KeyError: Column index 0 does not exist in douban_years")
+        douban_years = pd.Series(dtype=int)
+    except ValueError:
+        print("ValueError: Cannot convert column to integer")
+        douban_years = pd.Series(dtype=int)
+else:
+    print("No years extracted from Douban_Info")
+
+# 检查 imdb_years 是否为空
+imdb_years = imdb_data["Release_Year"].value_counts().sort_index()
+
+# 绘制图表
+if not douban_years.empty and not imdb_years.empty:
+    douban_years.plot(kind="bar", alpha=0.7, label="Douban", figsize=(10, 5))
+    imdb_years.plot(kind="bar", alpha=0.7, label="IMDb", color="orange")
+    plt.title("Release Year Distribution")
+    plt.xlabel("Year")
+    plt.ylabel("Number of Movies")
+    plt.legend()
+    plt.show()
+else:
+    print("Cannot plot Release Year Distribution as one or both datasets are empty.")
+
+# Analyze genre distribution
+imdb_genres = (
+    imdb_data["IMDB_Genre"].str.split(",").explode().str.strip().value_counts()
+)
+
+# 检查 imdb_genres 是否为空
+if not imdb_genres.empty:
+    plt.figure(figsize=(10, 5))
+    imdb_genres.head(10).plot(kind="bar", alpha=0.7, color="orange")
+    plt.title("Top 10 IMDb Genres")
+    plt.xlabel("Genre")
+    plt.ylabel("Count")
+    plt.show()
+else:
+    print("Cannot plot Top 10 IMDb Genres as the dataset is empty.")
+
+# Top directors by movie count
+douban_directors = douban_data["Douban_Info"].str.extract(r"导演: (.+?) ").dropna()
+douban_top_directors = douban_directors[0].value_counts().head(10)
+
+imdb_top_directors = imdb_data["IMDB_Director"].value_counts().head(10)
+
+# 检查 douban_top_directors 是否为空
+if not douban_top_directors.empty:
+    plt.figure(figsize=(10, 5))
+    douban_top_directors.plot(kind="bar", alpha=0.7, label="Douban", color="blue")
+    plt.title("Top 10 Douban Directors")
+    plt.xlabel("Director")
+    plt.ylabel("Movie Count")
+    plt.show()
+else:
+    print("Cannot plot Top 10 Douban Directors as the dataset is empty.")
+
+# 检查 imdb_top_directors 是否为空
+if not imdb_top_directors.empty:
+    plt.figure(figsize=(10, 5))
+    imdb_top_directors.plot(kind="bar", alpha=0.7, label="IMDb", color="orange")
+    plt.title("Top 10 IMDb Directors")
+    plt.xlabel("Director")
+    plt.ylabel("Movie Count")
+    plt.show()
+else:
+    print("Cannot plot Top 10 IMDb Directors as the dataset is empty.")
+
+# Save overlapping movies to a CSV file
+overlap_movies.to_csv("./file/overlap_movies.csv", index=False)
+
+# Print results
+print(f"豆瓣平均评分: {douban_avg_score}")
+print(f"IMDb平均评分: {imdb_avg_score}")
+print(f"重叠电影数量: {len(overlap_movies)}")
+```

@@ -1,0 +1,73 @@
+---
+title: "01_Getting_&_Knowing_Your_Data -> World Food Facts"
+output: 
+  html_document:
+    toc: FALSE
+---
+
+### Step 1. Go to https://www.kaggle.com/openfoodfacts/world-food-facts/data
+
+### Step 2. Download the dataset to your computer and unzip it.
+
+### Step 3. Use the tsv file and assign it to a dataframe called food
+```{python}
+import pandas as pd
+
+food = pd.read_csv(
+    "./file/en.openfoodfacts.org.products.tsv", sep="\t", low_memory=False
+) #使用low_memory=False这个参数会告诉 Pandas 在读取文件时使用更多的内存，从而避免某些类型的推断错误。
+```
+
+### Step 4. See the first 5 entries
+```{python}
+# 显示前5条数据，Display the first 5 rows of data
+food.head(5)
+```
+
+### Step 5. What is the number of observations in the dataset?
+```{python}
+# 获取行数，Get the number of rows
+num_observations = food.shape[0]
+print(f"There are {num_observations} observation records in the dataset.")
+```
+
+### Step 6. What is the number of columns in the dataset?
+```{python}
+# 获取列数，Get the number of columns
+num_columns = food.shape[1]
+print(f"There are {num_columns} columns in the dataset.")
+```
+
+### Step 7. Print the name of all the columns.
+```{python}
+print(food.columns.tolist())
+```
+
+### Step 8. What is the name of 105th column?
+```{python}
+# 获取第105个列的名称，get 105th column name
+column_name_105 = food.columns[
+    104
+]  # 索引从0开始，所以第105个列的索引是104，The index starts from 0, so the index of the 105th column is 104
+print(column_name_105)
+```
+
+### Step 9. What is the type of the observations of the 105th column?
+```{python}
+# 获取第105列的数据类型, get type of the 105th column
+column_type = food.dtypes.iloc[104]
+print(f"dtype('{column_type}')")
+```
+
+### Step 10. How is the dataset indexed?
+```{python}
+# 查看索引类型，View index type
+print(food.index)
+```
+
+### Step 11. What is the product name of the 19th observation?
+```{python}
+# 获取第19个观察值的产品名称，Obtain the product name for the 19th observation value
+product_name_19th = food.iloc[18]['product_name']
+print(product_name_19th)
+```

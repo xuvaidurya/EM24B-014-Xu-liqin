@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+/.quarto/
+.DS_Store
+/_site/
+labs/01_Getting_And_Knowing_Your_Data/file/

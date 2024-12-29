@@ -1,0 +1,57 @@
+---
+title: "Xuliqin Practice1127-1"
+output: 
+  html_document:
+    toc: FALSE
+---
+
+```{python}
+import matplotlib.pyplot as plt
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+import textwrap
+```
+
+```{python}
+pd.read_csv(
+    "https://vincentarelbundock.github.io/Rdatasets/csv/dplyr/storms.csv", nrows=10
+)
+```
+
+```{python}
+url = "http://aeturrell.com/research"
+page = requests.get(url)
+page.text[:300]
+```
+
+```{python}
+soup = BeautifulSoup(page.text, "html.parser")
+print(soup.prettify()[60000:60500])
+```
+
+```{python}
+# Get all paragraphs
+all_paras = soup.find_all("p")
+# Just show one of the paras
+all_paras[1]
+```
+
+```{python}
+all_paras[1].text
+```
+
+```{python}
+projects = soup.find_all("div", class_="project-content listing-pub-info")
+projects = [x.text.strip() for x in projects]
+projects[:4]
+```
+
+```{python}
+df_list = pd.read_html(
+    "https://simple.wikipedia.org/wiki/FIFA_World_Cup", match="Sweden"
+)
+# Retrieve first and only entry from list of dataframes
+df = df_list[0]
+df.head()
+```

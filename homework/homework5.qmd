@@ -1,0 +1,83 @@
+---
+title: "Xuliqin The homework5"
+output: 
+  html_document:
+    toc: FALSE
+---
+
+```{python}
+import pandas as pd
+url ='https://raw.githubusercontent.com/tidyverse/datascience-box/refs/heads/main/course-materials/lab-instructions/lab-02/data/plastic-waste.csv'
+df = pd.read_csv(url)
+df
+```
+
+```{python}
+import pandas as pd
+from lets_plot import *
+
+LetsPlot.setup_html()
+```
+
+```{python}
+(
+  ggplot(df, aes("continent", "plastic_waste_per_cap")) +
+  geom_histogram()
+)
+```
+
+```{python}
+(
+  ggplot(df, aes("continent", "plastic_waste_per_cap"))
+  + geom_boxplot()
+)
+```
+
+```{python}
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# 利用violinplot函数绘制小提琴图
+sns.violinplot(x=df["continent"], y=df["plastic_waste_per_cap"])
+
+plt.show()
+```
+
+```{python}
+(
+    ggplot(df, aes("plastic_waste_per_cap", "mismanaged_plastic_waste_per_cap")) +
+  geom_point()
+)
+```
+
+```{python}
+(
+    ggplot(
+        df,
+        aes(
+            "plastic_waste_per_cap",
+            "mismanaged_plastic_waste_per_cap",
+            colour="continent",
+        ),
+    )
+    + geom_point()
+)
+```
+
+```{python}
+(
+    ggplot(df, aes(x="total_pop", y="plastic_waste_per_cap", colour="continent"))
+    + geom_point()
+    + xlim(0, 150000000)
+    + ylim(0, 0.8)
+)
+```
+
+```{python}
+(
+    ggplot(df, aes(x="coastal_pop", y="plastic_waste_per_cap", colour="continent"))
+    + geom_point()
+    + xlim(0, 50000000)
+    + ylim(0, 0.8)
+)
+```

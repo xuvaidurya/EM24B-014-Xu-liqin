@@ -1,0 +1,29 @@
+---
+title: "Xuliqin The homework3.1"
+output: 
+  html_document:
+    toc: FALSE
+---
+
+```{python}
+import pandas as pd
+url ='https://raw.githubusercontent.com/tidyverse/datascience-box/refs/heads/main/course-materials/lab-instructions/lab-03/data/nobel.csv'
+df = pd.read_csv(url)
+print(df.head())
+```
+
+```{python}
+df
+```
+
+```{python}
+df.info()
+```
+
+```{python}
+df[(df['country'].notna())]
+```
+
+```{python}
+df[(df['died_date'].isna())]
+```

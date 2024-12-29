@@ -1,0 +1,44 @@
+---
+title: "Xuliqin The homework3.2"
+output: 
+  html_document:
+    toc: FALSE
+---
+
+```{python}
+import pandas as pd
+url ='https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv'
+df = pd.read_csv(url)
+print(df.head())
+```
+
+```{python}
+df
+```
+
+```{python}
+df.info()
+```
+
+```{python}
+from skimpy import clean_columns
+df = clean_columns(df,case="snake")
+print(df.columns)
+```
+
+```{python}
+df.fillna("-")
+```
+
+```{python}
+df.describe()
+```
+
+```{python}
+sum_table = df.describe().round(2)
+sum_table
+```
+
+```{python}
+df.dropna()
+```

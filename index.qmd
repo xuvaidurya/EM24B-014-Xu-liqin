@@ -1,0 +1,16 @@
+---
+title: "Xuliqin's Quarto Website"
+output: 
+  html_document:
+    toc: FALSE
+---
+
+
+## Hello, welcome to visit my quarto website! 
+
+
+Welcome to **my website** and _data analysis portfolio._ 
+
+* This is my website and homework presentation
+* Please use the `Menu Bar` above to look around.
+

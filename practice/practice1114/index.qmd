@@ -1,0 +1,196 @@
+---
+title: "Xuliqin Practice1114"
+output: 
+  html_document:
+    toc: FALSE
+---
+
+```{python}
+%pip install openpyxl
+```
+
+```{python}
+import pandas as pd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+from pathlib import Path
+import pingouin as pg
+from lets_plot import *
+
+LetsPlot.setup_html(no_js=True)
+
+### You don't need to use these settings yourself
+### — they are just here to make the book look nicer!
+# Set the plot style for prettier charts:
+plt.style.use("https://raw.githubusercontent.com/aeturrell/core_python/main/plot_style.txt")
+```
+
+```{python}
+data_np = pd.read_excel(
+    "./file/doing-economics-datafile-working-in-excel-project-2.xls",
+    usecols="A:Q",
+    header=1,
+    index_col="Period",
+)
+data_n = data_np.iloc[:10, :].copy()
+data_p = data_np.iloc[14:24, :].copy()
+```
+
+```{python}
+test_data = {
+    "City A": [14.1, 14.1, 13.7],
+    "City B": [11.0, 12.6, 12.1],
+}
+
+
+# Original dataframe
+test_df = pd.DataFrame.from_dict(test_data)
+# A copy of the dataframe
+test_copy = test_df.copy()
+# A pointer to the dataframe
+test_pointer = test_df
+
+
+test_pointer.iloc[1, 1] = 99
+```
+
+```{python}
+print("test_df=")
+print(f"{test_df}\n")
+print("test_copy=")
+print(f"{test_copy}\n")
+```
+
+```{python}
+data_n.info()
+```
+
+```{python}
+data_n = data_n.astype("double")
+data_p = data_p.astype("double")
+```
+
+```{python}
+mean_n_c = data_n.mean(axis=1)
+mean_p_c = data_p.agg(np.mean, axis=1)
+```
+
+```{python}
+fig, ax = plt.subplots()
+mean_n_c.plot(ax=ax, label="Without punishment")
+mean_p_c.plot(ax=ax, label="With punishment")
+ax.set_title("Average contributions to the public goods game")
+ax.set_ylabel("Average contribution")
+ax.legend()
+```
+
+```{python}
+partial_names_list = ["F. Kennedy", "Lennon", "Maynard Keynes", "Wayne"]
+["John " + name for name in partial_names_list]
+```
+
+```{python}
+['John F. Kennedy', 'John Lennon', 'John Maynard Keynes', 'John Wayne']
+```
+
+```{python}
+# Create new dataframe with bars in
+compare_grps = pd.DataFrame(
+    [mean_n_c.loc[[1, 10]], mean_p_c.loc[[1, 10]]],
+    index=["Without punishment", "With punishment"],
+)
+# Rename columns to have 'round' in them
+compare_grps.columns = ["Round " + str(i) for i in compare_grps.columns]
+# Swap the column and index variables around with the transpose function, ready for plotting (.T is transpose)
+compare_grps = compare_grps.T
+# Make a bar chart
+compare_grps.plot.bar(rot=0)
+```
+
+```{python}
+n_c = data_n.agg(["std", "var", "mean"], 1)
+n_c
+```
+
+```{python}
+p_c = data_p.agg(["std", "var", "mean"], 1)
+```
+
+```{python}
+fig, ax = plt.subplots()
+n_c["mean"].plot(ax=ax, label="mean")
+# mean + 2 standard deviations
+(n_c["mean"] + 2 * n_c["std"]).plot(ax=ax, ylim=(0, None), color="red", label="±2 s.d.")
+# mean - 2 standard deviations
+(n_c["mean"] - 2 * n_c["std"]).plot(ax=ax, ylim=(0, None), color="red", label="")
+for i in range(len(data_n.columns)):
+    ax.scatter(x=data_n.index, y=data_n.iloc[:, i], color="k", alpha=0.3)
+ax.legend()
+ax.set_ylabel("Average contribution")
+ax.set_title("Contribution to public goods game without punishment")
+plt.show()
+```
+
+```{python}
+fig, ax = plt.subplots()
+p_c["mean"].plot(ax=ax, label="mean")
+# mean + 2 sd
+(p_c["mean"] + 2 * p_c["std"]).plot(ax=ax, ylim=(0, None), color="red", label="±2 s.d.")
+# mean - 2 sd
+(p_c["mean"] - 2 * p_c["std"]).plot(ax=ax, ylim=(0, None), color="red", label="")
+for i in range(len(data_p.columns)):
+    ax.scatter(x=data_p.index, y=data_p.iloc[:, i], color="k", alpha=0.3)
+ax.legend()
+ax.set_ylabel("Average contribution")
+ax.set_title("Contribution to public goods game with punishment")
+plt.show()
+```
+
+```{python}
+data_p.apply(lambda x: x.max() - x.min(), axis=1)
+```
+
+```{python}
+# A lambda function accepting three inputs, a, b, and c, and calculating the sum of the squares
+test_function = lambda a, b, c: a**2 + b**2 + c**2
+
+
+# Now we apply the function by handing over (in parenthesis) the following inputs: a=3, b=4 and c=5
+test_function(3, 4, 5)
+```
+
+```{python}
+range_function = lambda x: x.max() - x.min()
+range_p = data_p.apply(range_function, axis=1)
+range_n = data_n.apply(range_function, axis=1)
+```
+
+```{python}
+fig, ax = plt.subplots()
+range_p.plot(ax=ax, label="With punishment")
+range_n.plot(ax=ax, label="Without punishment")
+ax.set_ylim(0, None)
+ax.legend()
+ax.set_title("Range of contributions to the public goods game")
+plt.show()
+```
+
+```{python}
+funcs_to_apply = [range_function, "max", "min", "std", "mean"]
+summ_p = data_p.apply(funcs_to_apply, axis=1).rename(columns={"<lambda>": "range"})
+summ_n = data_n.apply(funcs_to_apply, axis=1).rename(columns={"<lambda>": "range"})
+summ_n.loc[[1, 10], :].round(2)
+```
+
+```{python}
+summ_p.loc[[1, 10], :].round(2)
+```
+
+```{python}
+pg.ttest(x=data_n.iloc[0, :], y=data_p.iloc[0, :])
+```
+
+```{python}
+pg.ttest(x=data_n.iloc[0, :], y=data_p.iloc[0, :], paired=True)
+```

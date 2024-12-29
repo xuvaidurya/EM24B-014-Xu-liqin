@@ -1,0 +1,12 @@
+{
+  "hash": "674ba6fa3f0d2875b7ba9eaf4571aa95",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"04_Automated_Slides_with_Quarto -> Automated Slides with Quarto\"\noutput: \n  html_document:\n    toc: FALSE\n---\n\n\n\n\n## Here Are Some Code Outputs\n\n::: {#502c7f70 .cell execution_count=1}\n\n::: {.cell-output .cell-output-display}\n![](Automated_Slides_files/figure-html/cell-2-output-1.png){width=450 height=439}\n:::\n:::\n\n\n",
+    "supporting": [
+      "Automated_Slides_files\\figure-html"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
